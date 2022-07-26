@@ -20,7 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
             flexibleSpace: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.yellow, Colors.green],
+                  colors: [Colors.lightBlue, Colors.green],
                   begin: FractionalOffset(0.0, 0.0),
                   end: FractionalOffset(1.0, 0.0),
                   stops: [0.0, 1.0],
@@ -64,7 +64,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
-                    colors: [Colors.yellow, Colors.green])),
+                    colors: [Colors.lightBlue, Colors.green])),
             child: TabBarView(
               children: [
                 LoginScreen(),

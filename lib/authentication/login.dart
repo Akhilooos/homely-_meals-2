@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:homely_meals2/resources/authentication_methods.dart';
+import 'package:homely_meals2/utils/utils.dart';
 import 'package:homely_meals2/widgets/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  AuthenticationMethods authenticationMethods = AuthenticationMethods();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -48,16 +53,24 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           ElevatedButton(
-            child: const Text(
-              "Login",
-              style: TextStyle(color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
-            ),
-            onPressed: () => print("clicked"),
-          )
+              child: const Text(
+                "Login",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+              ),
+              onPressed: () async {
+                String output = await authenticationMethods.signInuser(
+                    email: emailController.text,
+                    password: passwordController.text);
+                if (output == "success") {
+                  //code
+                } else {
+                  Utils().showSnackBar(context: context, content: output);
+                 }
+              })
         ],
       ),
     );

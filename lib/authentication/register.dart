@@ -1,9 +1,11 @@
-import 'dart:ffi';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:homely_meals2/resources/authentication_methods.dart';
+import 'package:homely_meals2/utils/utils.dart';
 import 'package:homely_meals2/widgets/custom_text_field.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -22,12 +24,11 @@ class _RegisterScrrenState extends State<RegisterScrren> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+  AuthenticationMethods authenticationMethods = AuthenticationMethods();
 
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
-
-  Position? position;
-  List<Placemark>? placeMarks;
+  var locationMsg = "";
 
   Future<void> _getImage() async {
     imageXFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -36,23 +37,23 @@ class _RegisterScrrenState extends State<RegisterScrren> {
     });
   }
 
-  getCurrentLocation() async {
-    Position newPosition = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    position = newPosition;
-    placeMarks =
-        await placemarkFromCoordinates(position!.latitude, position!.longitude);
-
-    Placemark pMark = placeMarks![0];
-
-    String completeAdress =
-        '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
-    locationController.text = completeAdress;
+  void getLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark place = placemarks[0];
+    var address =
+        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    setState(() {
+      locationMsg = address;
+      // print(locationMsg);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    locationController.text = locationMsg;
     return SingleChildScrollView(
       child: Container(
         child: Column(
@@ -122,7 +123,7 @@ class _RegisterScrrenState extends State<RegisterScrren> {
                     controller: locationController,
                     hintText: "Location",
                     isObsecre: false,
-                    enabled: false,
+                    enabled: true,
                   ),
                   Container(
                     width: 400,
@@ -137,8 +138,9 @@ class _RegisterScrrenState extends State<RegisterScrren> {
                         Icons.location_on,
                         color: Colors.white,
                       ),
-                      onPressed: () {
-                        getCurrentLocation();
+                      onPressed: () async {
+                        //location
+                        getLocation();
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.amber,
@@ -163,7 +165,21 @@ class _RegisterScrrenState extends State<RegisterScrren> {
                 primary: Colors.blue,
                 padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               ),
-              onPressed: () => print("clicked"),
+              onPressed: () async {
+                String output = await authenticationMethods.signUpuser(
+                    name: nameController.text,
+                    email: emailController.text,
+                    phone: passwordController.text,
+                    password: passwordController.text,
+                    confirmPassword: confirmPasswordController.text,
+                    location: locationController.text);
+
+                if (output == "success") {
+                  log(output);
+                } else {
+                  Utils().showSnackBar(context: context, content: output);
+                }
+              },
             )
           ],
         ),

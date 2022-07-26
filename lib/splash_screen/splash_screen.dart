@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:homely_meals2/authentication/auth_screen.dart';
+import 'package:homely_meals2/streambulider.dart';
 
 class Mysplashscreen extends StatefulWidget {
   Mysplashscreen({Key? key}) : super(key: key);
@@ -13,7 +13,8 @@ class Mysplashscreen extends StatefulWidget {
 class _MysplashscreenState extends State<Mysplashscreen> {
   startTimer() {
     Timer(const Duration(seconds: 3), () async {
-      Navigator.push(context, MaterialPageRoute(builder: (c) => AuthScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (c) => streamBuilder()));
     });
   }
 

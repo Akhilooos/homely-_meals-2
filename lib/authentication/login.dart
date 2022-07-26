@@ -62,6 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               ),
               onPressed: () async {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  return  LoginScreen();
+                } )
+                );
                 String output = await authenticationMethods.signInuser(
                     email: emailController.text,
                     password: passwordController.text);

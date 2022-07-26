@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:homely_meals2/resources/cloudfirestore_methods.dart';
 
 class AuthenticationMethods {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  CloudFirestoreClass cloudfirestoremethod = CloudFirestoreClass();
   Future<String> signUpuser(
       {required String name,
       required String email,
@@ -23,6 +26,7 @@ class AuthenticationMethods {
       try {
         await firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password);
+        await cloudfirestoremethod.uploadData(name: name, email: email);
       } catch (e) {
         output = e.toString();
       }
@@ -33,18 +37,14 @@ class AuthenticationMethods {
     return output;
   }
 
-  Future<String> signInuser(
-      {
-      required String email,
-      required String password,}) async {
+  Future<String> signInuser({
+    required String email,
+    required String password,
+  }) async {
     email.trim();
     password.trim();
     String output = "Something went wrong";
-    if (
-        email != "" &&
-        password != "" 
-        )
-         {
+    if (email != "" && password != "") {
       try {
         await firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password);

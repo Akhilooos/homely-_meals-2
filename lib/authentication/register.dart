@@ -166,6 +166,10 @@ class _RegisterScrrenState extends State<RegisterScrren> {
                 padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
               ),
               onPressed: () async {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  return  const RegisterScrren();
+                } )
+                );
                 String output = await authenticationMethods.signUpuser(
                     name: nameController.text,
                     email: emailController.text,
